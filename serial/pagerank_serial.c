@@ -1,7 +1,7 @@
-#include "pagerank_serial.h"
+#include "Node.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <sys/time.h>
 #include <math.h>
 #include <assert.h>
 #include <string.h>
@@ -85,7 +85,7 @@ int main(int argc, char** argv)
    // Check input arguments
    if (argc != 2)
    {
-      printf("Error! Arguments required: graph filename\n");
+      printf("Error! argument required: graph filename\n");
       return 0;
    } 
 
@@ -108,7 +108,7 @@ int main(int argc, char** argv)
     
    for (i = 0; i < N; i++)             // section/task clause?
    {
-      Nodes[i].con_size = 0;
+      Nodes[i].con_size = 0; //con_size: represents number of nodes a node is connected to 
       Nodes[i].To_id = (int*) malloc(sizeof(int));
    }
 
@@ -180,12 +180,12 @@ int main(int argc, char** argv)
          }
             
       }
+      printf("Max error in %d iteration is %f\n", iterations, max_error);
       iterations++;
    }
 
    gettimeofday(&end, NULL);
    
-   printf("\n");
    FILE *f;
    f = fopen("output.txt", "w");
 
@@ -194,16 +194,13 @@ int main(int argc, char** argv)
    {
       fprintf(f,"Page Rank of Website %d  = %f\n",i,Nodes[i].p_t1);
    }
-   printf("\n");
    fclose(f);
-   
-    
+
    // Print no of iterations
    printf("Total iterations: %d\n", iterations);
 	
    totaltime = (((end.tv_usec - start.tv_usec) / 1.0e6 + end.tv_sec - start.tv_sec) * 1000) / 1000;
-
-   printf("\nTotaltime = %f seconds\n", totaltime);
+   printf("Processing time: %f secs\n", totaltime);
    printf("End of program!\n");
     
    return (EXIT_SUCCESS);
