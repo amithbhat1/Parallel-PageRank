@@ -16,12 +16,15 @@ Compile & Execute instructions :
 
 
 Serial : gcc pagerank_serial.c
+
          ./a.out ../web-Google.txt
          
 OpenMP : gcc -fopenmp pagerank_openmp.c
+
          /a.out ../web-Google.txt
          
 MPI   : mpic++ pagerank_mpi.c
+
         mpiexec -np [number_of_processors] /a.out ../web-Google.txt  [ Does not give the same output as Serial and OpenMP ]
 
         Running the MPI program with 1 processor will give the same output as the previous two programs.
