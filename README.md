@@ -1,6 +1,8 @@
 # Parallel-PageRank
 
-Parallel implementation of PageRank algorithm using OpenMP and MPI
+Parallel implementation of PageRank algorithm using OpenMP and MPI.
+
+Dataset sourced from : http://snap.stanford.edu/data/web-Google.html
 
 
 Work Done :
