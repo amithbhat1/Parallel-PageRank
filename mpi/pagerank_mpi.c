@@ -6,7 +6,7 @@
 #include <math.h>
 #include <assert.h>
 #include <string.h>
-#include "util.h"
+// #include "util.h"
 //#include "mpi.h"
 #include <stddef.h>
 #include <mpi.h>
@@ -30,6 +30,7 @@ typedef struct
 double threshold, d;
 double start, stop;
 
+FILE *times;
 // Table of node's data
 
 
@@ -330,8 +331,9 @@ int main(int argc, char** argv)
 			// Print no of iterations
 			printf("Total iterations: %d\n", iterations);
 			
-
+			times = fopen("times.txt", "a");
 			printf("Runtime = %f\n", stop-start);
+			fprintf(times, "%f\n", (stop-start));
 			printf("End of program!\n");
 			MPI_Type_free(&mpiNode);
 			//MPI_Abort(MPI_COMM_WORLD,0);
@@ -341,10 +343,6 @@ int main(int argc, char** argv)
 		}
 
 	MPI_Finalize();
-   
-   
-
-
 	
 	//return (EXIT_SUCCESS);
 }
