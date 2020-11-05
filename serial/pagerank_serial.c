@@ -16,6 +16,7 @@ double threshold, d;
 // Table of node's data
 Node *Nodes;
 
+FILE *times;
 
 //Read graph from txt file	
 
@@ -198,9 +199,13 @@ int main(int argc, char** argv)
 
    // Print no of iterations
    printf("Total iterations: %d\n", iterations);
+   times = fopen("times.txt", "a");
+
 	
    totaltime = (((end.tv_usec - start.tv_usec) / 1.0e6 + end.tv_sec - start.tv_sec) * 1000) / 1000;
    printf("Processing time: %f secs\n", totaltime);
+   fprintf(times, "%f\n", (totaltime));
+
    printf("End of program!\n");
     
    return (EXIT_SUCCESS);
