@@ -6,7 +6,7 @@
 #include <string.h>
 #include <omp.h>
 #include<sys/time.h>
-
+#define NUM_THREADS 16
 // number of nodes
 int N;
 
@@ -192,7 +192,7 @@ int main(int argc, char** argv)
    {
       sum = 0;
       // Initialize P(t) and P(t + 1) values 
-      #pragma omp parallel for private(i) shared(Nodes)
+      #pragma omp parallel for num_threads(NUM_THREADS) private(i) shared(Nodes) schedule(static)
       for (i = 0; i < N; i++)
       {
          // Update the "old" P table with the new one 
@@ -201,7 +201,7 @@ int main(int argc, char** argv)
       }
 
       //distributing page rank to all pages connected to the given page
-      #pragma omp parallel for num_threads(16) private(i,j,index,node_constant) shared(Nodes)  schedule(guided) reduction(+:sum)
+      #pragma omp parallel for num_threads(NUM_THREADS) private(i,j,index,node_constant) shared(Nodes)  schedule(static) reduction(+:sum)
       for (i = 0; i < N; i++)
       {
          if (Nodes[i].con_size != 0)
@@ -227,7 +227,7 @@ int main(int argc, char** argv)
       max_error = -1;
         
       // Compute the new probabilities and find maximum error
-      #pragma omp parallel for private(i) shared(Nodes,max_error)
+      #pragma omp parallel for num_threads(NUM_THREADS) private(i) shared(Nodes,max_error) schedule(static)
       for (i = 0;i < N; i++)
       {
          Nodes[i].p_t1 = d * (Nodes[i].p_t1 + sum) + (1 - d) * Nodes[i].e;
@@ -245,25 +245,25 @@ int main(int argc, char** argv)
 
    omp_stop=omp_get_wtime();
 
-   printf("\n");
    FILE *f;
    f = fopen("output.txt", "w");
 
-   // Print final probabilitities
+   //FILE* tf;
+   //tf = fopen("processing_time.txt", "a");
+
    for (i = 0; i < N; i++)
    {
       fprintf(f,"Page Rank of Website %d  = %f\n",i,Nodes[i].p_t1);
    }
-   printf("\n");
+
    fclose(f);
    
    for(i=0;i<iterations;i++){
-      printf("Max error in %d iteration is %f\n",i,error_log[i]);
-
+     printf("Max error in %d iteration is %f\n",i,error_log[i]);
    } 
-   // Print no of iterations
+
    printf("Total iterations: %d\n", iterations);
    printf("Processing time: %f \n", omp_stop-omp_start); 
-   printf("End of program!\n"); 
+   printf("Number of threads: %d\n", NUM_THREADS);
    return (EXIT_SUCCESS);
 }
